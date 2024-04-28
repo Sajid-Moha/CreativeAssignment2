@@ -1,0 +1,82 @@
+/* Template: */
+  /* colors */
+
+  /* sizing */
+
+  /* alignment */
+
+  /* text */
+
+.gameFrame {
+  /* colors */
+  background-color: #FBF7F5;
+
+  /* sizing */
+  width: 90%;
+  padding: 2%;
+  border-radius: 5px;
+  
+  /* alignment */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  /* text */
+  text-align: center;
+}
+
+.resultImage {
+  /* colors */
+
+  /* sizing */
+  height: 50%;
+  margin: 2em;
+
+  /* alignment */
+
+  /* text */
+}
+
+
+/* game styles */
+.userMove > button {
+  background-color: #FDB927;
+  color: #552583;
+
+  width: 8em;
+  padding: .5em;
+  border: none;
+  border-radius: 3px;
+}
+
+.userMove > button:hover {
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.gameTitle {
+  margin-bottom: 1em;
+}
+
+#results {
+  /* colors */
+  background-color: #552583;
+  color: #FDB927;
+  
+  /* sizing */
+  width: 50%;
+  height: 4em;
+  padding: 1em;
+  margin-top: 2em;
+  border-radius: 5px;
+
+  /* alignment */
+
+  /* text */
+
+}
+
+#winner {
+  margin-top: 1.5em;
+}
