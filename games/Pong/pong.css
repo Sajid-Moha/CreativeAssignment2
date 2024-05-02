@@ -1,0 +1,46 @@
+#gameFrame {
+  width: 100%;
+  min-height: 80vh;
+
+  background-color: whitesmoke;
+
+  position: relative;
+  overflow: hidden;
+}
+
+#userPaddle, #compPaddle {
+  position: absolute;
+  z-index: 1000;
+
+  width: 10vw;
+  height: 1vw;
+
+  /* center paddle horizontally on screen */
+  left: 50%;
+/*   transform: translateX(-50%); */
+}
+
+#userPaddle {
+  background-color: blue;
+  border: 2px solid darkblue;
+  top: 90%;
+}
+
+#compPaddle {
+  background-color: red;
+  border: 2px solid darkred;
+  bottom: 90%;
+}
+
+#ball {
+  position: absolute;
+  background-color: black;
+
+  height: 2vw;
+  width: 2vw;
+  border-radius: 50%;
+
+  /* center ball to begin */
+  top: 50%;
+  left: 50%;
+}
