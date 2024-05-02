@@ -80,9 +80,9 @@ class Ball {
     const exitTop = ballRect.top <= boundingBoxRect.top;
     const exitBottom = ballRect.bottom >= boundingBoxRect.bottom
     const dy = this.ball['direction']['y'];
-    if ((exitBottom && dy < 0) || (exitTop && dy > 0)) {
-      this.reset();
-      //this.ball['direction']['y'] *= -1;;
+    if ((exitBottom && dy > 0) || (exitTop && dy < 0)) {
+      //this.reset();
+      this.ball['direction']['y'] *= -1;;
     }
   }
 
@@ -92,16 +92,24 @@ class Ball {
     this.obstacles.forEach((obstacle) => {
       const oRect = obstacle.getBoundingClientRect();
 
-      const intersect = (
-        ballRect.left <= oRect.right &&
-        ballRect.right >= oRect.left &&
-        ballRect.top <= oRect.bottom &&
-        ballRect.bottom >= oRect.top
-      );
+      const dx = this.ball['direction']['x'];
+      const dy = this.ball['direction']['y'];
 
-      if (intersect) {
+      const withinWidth = (ballRect.left <= oRect.right && ballRect.left >= oRect.left) ||
+                          (ballRect.right <= oRect.right && ballRect.right >= oRect.left);
+      const withinHeight = (ballRect.bottom <= oRect.top && ballRect.bottom >= oRect.bottom) ||
+                           (ballRect.top <= oRect.top && ballRect.top >= oRect.bottom);
+
+      const intersectRight = ballRect.left <= oRect.right && ballRect.left >= oRect.left && withinHeight;
+      const intersectLeft = ballRect.right <= oRect.right && ballRect.right >= oRect.left && withinHeight;
+      const intersectTop = ballRect.bottom >= oRect.top && ballRect.bottom <= oRect.bottom && withinWidth;
+      const intersectBottom = ballRect.top >= oRect.top && ballRect.top <= oRect.bottom && withinWidth;
+
+      if (false && intersectRight && dx < 0 || intersectLeft && dx > 0) {
+        this.ball['direction']['x'] *= -1;
+      }
+      if (intersectTop && dy > 0 || intersectBottom && dy < 0) {
         this.ball['direction']['y'] *= -1;
-        return;
       }
     });
   }
