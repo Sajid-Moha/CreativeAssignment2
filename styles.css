@@ -121,3 +121,9 @@ nav {
 footer {
   margin: 0;
 }
+
+@media (max-width: 650px) {
+  #siteTitle {
+    font-size: 1.25em;
+  }
+}

@@ -17,6 +17,7 @@
   border-radius: 5px;
   
   /* alignment */
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -26,24 +27,8 @@
   text-align: center;
 }
 
-.resultImage {
-  /* colors */
-
-  /* sizing */
-  height: 50%;
-  margin: 2em;
-
-  /* alignment */
-
-  /* text */
-}
-
-
-/* game styles */
-.gameFrame {
-  position: relative;
-}
-
+/* add background image, use pseudoelement so we can use filter without
+    affecting children */
 .gameFrame::after {
   content: "";
   position: absolute;
@@ -57,20 +42,27 @@
   filter: grayscale(100%) blur(3px);
 }
 
+/* ensure all children are in front of background */
 .gameFrame > * {
   position: relative;
   z-index: 1000;
 }
 
 .userMove > button {
+  /* colors */
   background-color: #FDB927;
   color: #552583;
-  font-weight: bolder;
 
+  /* sizing */
   width: 8em;
   padding: .5em;
   border: none;
   border-radius: 3px;
+
+  /* alignment */
+
+  /* text */
+  font-weight: bolder;
 }
 
 .userMove > button:hover {
@@ -102,4 +94,18 @@
 
 #winner {
   margin-top: 1.5em;
+}
+
+/* responsiveness */
+@media (max-width: 650px) {
+  .userMove {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .userMove > button {
+    margin-bottom: 1.5em;
+  }
 }

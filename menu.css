@@ -117,9 +117,10 @@ footer {
     /* colors */
     display: none;
     background-color: #FDB927;
+    border: 2px solid #552583;
 
     /* sizing */
-    width: 100%;
+    width: 60%;
     padding: 1em;
     border-radius: 5px;
     
@@ -128,19 +129,12 @@ footer {
     top: 50%;
     transform: translateY(-50%);
     position: absolute;
-    z-index: 1000;
+    z-index: 99999;
     
   
     /* text */
     font-weight: 700;
 
-}
-
-/* media queries */
-@media (max-width: 650px) {
-  .tooltip {
-    width: 5em;
-  }
 }
 
 .left {
@@ -154,5 +148,18 @@ footer {
 .gameOption:hover {
   .tooltip {
     display: block;
+  }
+}
+
+@media (max-width: 900px) {
+  .gameOption:hover {
+    .gameImage, .gameTitle {
+      filter: blur(3px);
+    }
+  }
+
+  .left, .right {
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }
