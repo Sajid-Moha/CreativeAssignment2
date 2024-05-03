@@ -247,9 +247,10 @@ function updateVisualBoard(boardElement, boardState) {
   boardState.forEach((row) => {
     let cur_tile = cur_row.firstElementChild;
 
-    row.forEach((tile_value) => {
+    row.forEach((tileValue) => {
       let cur_image = cur_tile.firstElementChild;
-      cur_image.src = imgDict[tile_value]
+      cur_image.src = imgDict[tileValue]
+      cur_image.alt = `${tileValue}`;
 
       cur_tile = cur_tile.nextElementSibling;
     });
