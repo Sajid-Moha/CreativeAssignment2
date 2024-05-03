@@ -73,8 +73,8 @@ class pipeGenerator {
       /* reset for next iteration */
       this.pipeSeparation = 0;
 
-      /* randomize y position between 8 and 51 */
-      let pipePosition = Math.floor(Math.random() * 43) + 8;
+      /* randomize y position between 8 and 38 */
+      let pipePosition = Math.floor(Math.random() * 30) + 8;
 
       /* generate current top pipe */
       let topPipe = document.createElement('div');
