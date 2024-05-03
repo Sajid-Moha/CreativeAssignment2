@@ -197,13 +197,3 @@ class UserPaddle {
     window.requestAnimationFrame(gameCycle);
   }
 }
-
-
-/* testing purposes */
-let ball = document.getElementById('ball');
-let bRect = ball.getBoundingClientRect();
-console.log(bRect);
-
-let userPaddle = document.getElementById('userPaddle');
-let uRect = ball.getBoundingClientRect();
-console.log(uRect)

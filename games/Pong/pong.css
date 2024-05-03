@@ -2,7 +2,11 @@
   width: 100%;
   min-height: 80vh;
 
-  background-color: whitesmoke;
+  background-color: wheat;
+  background-image: url(../../src/img/cavs.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 
   position: relative;
   overflow: hidden;
@@ -33,8 +37,11 @@
 }
 
 #ball {
+  background-image: url(../../src/img/gameImages/bball.png);
+  background-size: cover;
   position: absolute;
-  background-color: black;
+  background-color: darkorange;
+  border: 1px solid black;
 
   height: 2vw;
   width: 2vw;
