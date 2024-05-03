@@ -21,6 +21,9 @@ class Game {
     this.generateValue();
   }
 
+  /**
+   * reset board to game start condition 
+   */
   reset() {
     this.board = [[0, 0, 0, 0],
              [0, 0, 0, 0],
@@ -31,6 +34,10 @@ class Game {
     this.generateValue();
   }
 
+  /**
+   * check if 2048 has been found in board
+   * @returns {boolean} true if won, false if not yet
+   */
   gameWon() {
     let won = false;
     this.board.forEach((row) => {
@@ -47,6 +54,10 @@ class Game {
     return won;
   }
 
+  /**
+   * Determines if there are any possible moves that can be played
+   * @returns {boolean} true if game has been lost, false otherwise
+   */
   gameLost() {
     if (this.emptyPositions.length != 0) return false;
     let winnable = false;
@@ -176,6 +187,9 @@ class Game {
     this.updateEmptyPositions();
   }
 
+  /**
+   * Generates a '2' tile at some random empty position on the board
+   */
   generateValue() {
     const randomIndex = Math.floor(Math.random() * this.emptyPositions.length);
     const random_row = this.emptyPositions[randomIndex][0];
@@ -185,6 +199,7 @@ class Game {
   }
 };
 
+// use to go from tile value -> number image
 const imgDict = {
   0: '',
   2: '../../src/img/gameImages/2048/2.png',
@@ -202,6 +217,12 @@ const imgDict = {
 
 // helper functions
 
+/**
+ * 
+ * @param {int[][]} b1 - 2d array of integers
+ * @param {int[][]} b2 - 2d array of integers
+ * @returns {boolean} returns true of b1 === b2 by value
+ */
 function compareBoards(b1, b2) {
   if (b1.length != b2.length) return false;
 
@@ -216,6 +237,11 @@ function compareBoards(b1, b2) {
   return true;
 }
 
+/**
+ * Updates graphical representation of board to match matrix representation
+ * @param {HTMLElement} boardElement - html element that will visualize board 
+ * @param {int[][]} boardState - matrix representation of board state
+ */
 function updateVisualBoard(boardElement, boardState) {
   let cur_row = boardElement.firstElementChild;
   boardState.forEach((row) => {
@@ -231,6 +257,11 @@ function updateVisualBoard(boardElement, boardState) {
   });
 }
 
+/**
+ * Hides board and prompts user to restart game
+ * @param {string} message - what message do you want to give user 
+ * @returns {HTMLElement} - visual to provide to user for seamless transition
+ */
 function restartVisual(message) {
   let result = document.createElement('section');
   result.classList.add('gameOver');
@@ -258,6 +289,11 @@ function restartVisual(message) {
   return result;
 }
 
+/**
+ * Hides 2048 board and informs user of result. Then display restart screen.
+ * @param {boolean} win - did user win? 
+ * @param {int[][]} boardElement - matrix representation of board state
+ */
 function endVisuals(win, boardElement) {
   boardElement.style.display = 'none';
   const message = win ? "You Win! :D" : "You Lose! :(";
@@ -279,10 +315,6 @@ function endVisuals(win, boardElement) {
 /**
  * Initialize Game State
  */
-let test_b = [[1024, 1024, 0, 0],
-         [0, 0, 0, 0],
-         [0, 0, 0, 0],
-         [0, 0, 0, 0]];
 let curBoard = new Game();
 
 /* draw initial board */
