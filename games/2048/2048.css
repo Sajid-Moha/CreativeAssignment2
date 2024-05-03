@@ -90,3 +90,30 @@
   }
 }
 
+
+/* Game End Styles */
+.gameOver {
+  text-align: center;
+}
+
+#reset {
+  position: relative;
+  border-radius: 50%;
+  background-color: transparent;
+  border: none;
+
+  width: 3em;
+  height: 3em;
+}
+
+#reset:hover {
+  cursor: pointer;
+}
+
+#resetter {
+  width: 100%;
+  aspect-ratio: 1;
+
+  padding-top: 2em;
+  object-fit: contain;
+}

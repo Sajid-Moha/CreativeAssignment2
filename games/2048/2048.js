@@ -13,13 +13,66 @@ class Game {
    * @returns 
    */
   constructor(boardState) {
+    if (boardState !== undefined) {
+      this.board = boardState.map(innerArray => innerArray.slice());
+    }
+    
     this.updateEmptyPositions();
-    if (boardState == undefined) {
-      return;
+    this.generateValue();
+  }
+
+  reset() {
+    this.board = [[0, 0, 0, 0],
+             [0, 0, 0, 0],
+             [0, 0, 0, 0],
+             [0, 0, 0, 0]];
+    this.emptyPositions = [];
+    this.updateEmptyPositions();
+    this.generateValue();
+  }
+
+  gameWon() {
+    let won = false;
+    this.board.forEach((row) => {
+      row.forEach((value) => {
+        if (value == 2048) {
+          won = true;
+          return;
+        }
+      });
+
+      if (won) return;
+    });
+
+    return won;
+  }
+
+  gameLost() {
+    if (this.emptyPositions.length != 0) return false;
+    let winnable = false;
+
+    // check rows
+    this.board.forEach((row) => {
+      for (let i = 1; i < row.length; i++) {
+        if (row[i] == row[i - 1]) {
+          winnable = true;
+          return;
+        }
+      }
+    });
+
+    // check columns
+    for (let i = 0; i < this.board.length; i++) {
+      const curCol = this.#getCol(i);
+      for (let j = 1; j < curCol.length; j++) {
+        if (curCol[j] == curCol[j - 1]) {
+          winnable = true;
+          return;
+        }
+      }
     }
 
-    // create deep copy of boardState
-    this.board = boardState.map(innerArray => innerArray.slice());
+    return !winnable;
   }
 
   /**
@@ -147,52 +200,7 @@ const imgDict = {
   2048: '../../src/img/gameImages/2048/2048.png',
 };
 
-let curBoard = new Game();
-const visualBoard = document.getElementById('board');
-
-function updateVisualBoard(board) {
-  let cur_row = visualBoard.firstElementChild;
-  board.forEach((row) => {
-    console.log(row)
-    let cur_tile = cur_row.firstElementChild;
-
-    row.forEach((tile_value) => {
-      let cur_image = cur_tile.firstElementChild;
-      cur_image.src = imgDict[tile_value]
-
-      cur_tile = cur_tile.nextElementSibling;
-    });
-    cur_row = cur_row.nextElementSibling;
-  });
-}
-
-curBoard.generateValue();
-updateVisualBoard(curBoard.board);
-
-document.addEventListener('keydown', function(event) {
-
-  // create deep copy of boardState
-  oldBoard = curBoard.board.map(innerArray => innerArray.slice());
-
-  if (event.key === 'ArrowLeft') {
-    curBoard.shiftLeft();
-  }
-  if (event.key === 'ArrowRight') {
-    curBoard.shiftRight();
-  }
-  if (event.key === 'ArrowUp') {
-    curBoard.shiftUp();
-  }
-  if (event.key === 'ArrowDown') {
-    curBoard.shiftDown();
-  }
-
-  if (!compareBoards(oldBoard, curBoard.board)) {
-    curBoard.generateValue();
-  }
-  
-  updateVisualBoard(curBoard.board);
-});
+// helper functions
 
 function compareBoards(b1, b2) {
   if (b1.length != b2.length) return false;
@@ -208,7 +216,143 @@ function compareBoards(b1, b2) {
   return true;
 }
 
-// supporting swipe gestures
+function updateVisualBoard(boardElement, boardState) {
+  let cur_row = boardElement.firstElementChild;
+  boardState.forEach((row) => {
+    let cur_tile = cur_row.firstElementChild;
+
+    row.forEach((tile_value) => {
+      let cur_image = cur_tile.firstElementChild;
+      cur_image.src = imgDict[tile_value]
+
+      cur_tile = cur_tile.nextElementSibling;
+    });
+    cur_row = cur_row.nextElementSibling;
+  });
+}
+
+function restartVisual(message) {
+  let result = document.createElement('section');
+  result.classList.add('gameOver');
+
+  let gameStatus = document.createElement('h2');
+  gameStatus.id = 'gameStatus';
+  gameStatus.textContent = message;
+
+  let restartPrompt = document.createElement('h3');
+  restartPrompt.id = 'restart';
+  restartPrompt.textContent = 'Play Again?'
+
+  let reset = document.createElement('button');
+  reset.id = 'reset';
+
+  let resetImage = document.createElement('img');
+  resetImage.id = 'resetter';
+  resetImage.src = '../../src/img/gameImages/2048/reset.png';
+  reset.appendChild(resetImage);
+
+  result.appendChild(gameStatus);
+  result.appendChild(restartPrompt);
+  result.appendChild(reset);
+
+  return result;
+}
+
+function endVisuals(win, boardElement) {
+  boardElement.style.display = 'none';
+  let message = win ? "You Win! :D" : "You Lose! :(";
+
+  const main = document.getElementsByTagName('main')[0];
+  const restart = restartVisual(message);
+  main.appendChild(restart);
+
+  let reset = document.getElementById('resetter');
+  reset.addEventListener('click', (e) => {
+    boardElement.style.display = 'flex';
+    restart.remove()
+    curBoard.reset();
+    updateVisualBoard(boardElement, curBoard.board);
+    gameOver = false;
+  });
+}
+
+/**
+ * Initialize Game State
+ */
+let test_b = [[1024, 1024, 0, 0],
+         [0, 0, 0, 0],
+         [0, 0, 0, 0],
+         [0, 0, 0, 0]];
+let curBoard = new Game(test_b);
+
+/* draw initial board */
+const visualBoard = document.getElementById('board');
+updateVisualBoard(visualBoard, curBoard.board);
+
+/**
+ * Game "Loop" Below This Point
+ */
+let gameOver = false;
+
+/**
+ * Helper function that progresses game once play has been recognized+executed
+ * @param {int[][]} oldBoardArray - copy of original board state
+ * @param {Game} curBoard - Game object that contains current board 
+ */
+function makePlay(oldBoardArray, curBoard) {
+  /* iff pieces move, you should generate a new piece */
+  if (!compareBoards(oldBoardArray, curBoard.board)) {
+    curBoard.generateValue();
+  }
+  updateVisualBoard(visualBoard, curBoard.board);
+
+  const win = curBoard.gameWon();
+  const loss = curBoard.gameLost();
+  if (win || loss) {
+    endVisuals(win, visualBoard);
+    gameOver = true;
+  }
+}
+
+/**
+ * Supporting keyboard input (arrow keys) for user to make plays
+ */
+document.addEventListener('keydown', function(event) {
+  if (!gameOver) {
+    /* create deep copy of boardState to reference later */
+    oldBoardArray = curBoard.board.map(innerArray => innerArray.slice());
+
+    if (event.key === 'ArrowLeft') {
+      curBoard.shiftLeft();
+    } else if (event.key === 'ArrowRight') {
+      curBoard.shiftRight();
+    } else if (event.key === 'ArrowUp') {
+      curBoard.shiftUp();
+    } else if (event.key === 'ArrowDown') {
+      curBoard.shiftDown();
+    }
+
+    makePlay(oldBoardArray, curBoard);
+  }
+});
+
+/* 
+*
+  Add Support For Swipe Controls
+*
+*/
+
+/**
+ * Determine the direction of a swipe given start and end coordinates
+ * @param {float} xS - starting x value
+ * @param {float} yS - starting y value
+ * @param {float} xE - ending x value
+ * @param {float}} yE - ending y value
+ * @returns -2 if gesture was 'swipe right'
+ *          +2 if gesture was 'swipe left'
+ *          -3 if gesture was 'swipe down'
+ *          +3 if gesture was 'swipe up'
+ */
 function swipeDirection(xS, yS, xE, yE) {
   const dx = xS - xE;
   const xDir = dx / Math.abs(dx);
@@ -223,15 +367,24 @@ function swipeDirection(xS, yS, xE, yE) {
   }
 }
 
+/**
+ * {float} xStart : x coordinate of the start of current swipe
+ * {float} yStart : y coordinate of the start of current swipe 
+ */
 let xStart, yStart;
+
 visualBoard.addEventListener('touchstart', (e) => {
   xStart = e.changedTouches[0].clientX;
   yStart = e.changedTouches[0].clientY;
 });
 
+/**
+ * Essentially repeat work for keyboard input with added step of determining
+ *  what direction the swipe was in
+ */
 visualBoard.addEventListener('touchend', (e) => {
-  // create deep copy of boardState
-  oldBoard = curBoard.board.map(innerArray => innerArray.slice());
+  /* create deep copy of boardState to reference later */
+  oldBoardArray = curBoard.board.map(innerArray => innerArray.slice());
 
   const xEnd = e.changedTouches[0].clientX;
   const yEnd = e.changedTouches[0].clientY;
@@ -239,27 +392,24 @@ visualBoard.addEventListener('touchend', (e) => {
 
   switch (dir) {
     case -2:
-      // swipe right
+      /* swipe right */
       curBoard.shiftRight();
       break;
     case 2:
-      // swipe left
+      /* swipe left */
       curBoard.shiftLeft();
       break;
     case 3:
-      // swipe up
+      /* swipe up */
       curBoard.shiftUp();
       break;
     case -3:
-      // swipe down
+      /* swipe down */
       curBoard.shiftDown();
       break;
     default:
       break;
   }
 
-  if (!compareBoards(oldBoard, curBoard.board)) {
-    curBoard.generateValue();
-  }
-  updateVisualBoard(curBoard.board);
+  makePlay(oldBoardArray, curBoard)
 });
