@@ -159,3 +159,12 @@
 		width: 14vw;
 	}
 }
+
+
+@media (max-width: 650px) {
+  #message{
+		font-size: 1em;
+		top: 50%;
+		white-space: nowrap;
+	}
+}
