@@ -12,13 +12,13 @@
   margin: 0;
   padding: 0;
 
-  font-family: sans-serif;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 /* tag styles */ 
 body {
   /* colors */
-  background-color: #FDB927;
+  background-color: whitesmoke;
 
   /* sizing */
 
@@ -30,6 +30,8 @@ body {
 
 nav {
   /* colors */
+  background-color: #552583;
+  ;
 
   /* sizing */
   height: 10vh;
@@ -39,6 +41,8 @@ nav {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  margin-bottom: 3em;
 
   /* text */
   text-align: center;
@@ -61,6 +65,8 @@ main {
 
 footer {
   /* colors */
+  background-color: #552583;
+  color: #FDB927;
 
   /* sizing */
   height: 10vh;
@@ -71,6 +77,8 @@ footer {
   justify-content: center;
   align-items: center;
 
+  margin-top: 3em;
+
   /* text */
   text-align: right;
 }
@@ -79,6 +87,7 @@ footer {
 /* custom classes */
 #siteTitle {
   /* colors */
+  color: #FDB927;
 
   /* sizing */
 
@@ -86,14 +95,18 @@ footer {
 
   /* text */
   text-align: center;
+  font-weight: 900;
 }
 
 .gameMenu {
   /* colors */
   background-color: #552583;
+  border-radius: 10%;
+
+  box-shadow: 0px 0px 30px #FDB927;
 
   /* sizing */
-  width: 90%;
+  /* width: 90%; */
   padding: 2%;
   
   /* alignment */
@@ -105,6 +118,35 @@ footer {
   text-align: center;
 }
 
+.gameMenu a:first-child {
+  border-radius: 10% 0 0 0;
+}
+
+.gameMenu a:nth-child(2) {
+  border-radius: 0 10% 0 0;
+}
+
+.gameMenu a:nth-child(3) {
+  border-radius: 0 0 0 10%;
+}
+
+.gameMenu a:nth-child(4) {
+  border-radius: 0 0 10% 0;
+}
+
+
+
+
+.gameMenu > a {
+  text-decoration: none;
+  color: black;
+}
+
+.gameMenu > a:hover {
+  text-decoration: none;
+  color: black;
+}
+
 .gameOption {
   /* colors */
   background-color: #FDB927;
@@ -113,6 +155,7 @@ footer {
   padding: 20px;
 
   /* alignment */
+  position: relative;
 
   /* text */
 
@@ -123,6 +166,20 @@ footer {
 .gameOption:hover {
   cursor: pointer;
   transform: scale(1.05);
+}
+
+.gameImage {
+  /* colors */
+  border: 3px solid white;
+
+  /* sizing */
+  width: 10em;
+  aspect-ratio: 1;
+
+  /* alignment */
+  margin-bottom: 1em;
+
+  /* text */
 }
 
 #copyrightTag {
