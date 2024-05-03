@@ -1,129 +1,184 @@
-let move_speed = 3, grativy = 0.5;
-let bird = document.querySelector('.bird');
-let img = document.getElementById('bird-1');
-let sound_point = new Audio('sounds effect/point.mp3');
-let sound_die = new Audio('sounds effect/die.mp3');
-
-// getting bird element properties
-let bird_props = bird.getBoundingClientRect();
-
-// This method returns DOMReact -> top, right, bottom, left, x, y, width and height
-let background = document.querySelector('.background').getBoundingClientRect();
-
-let score_val = document.querySelector('.score_val');
-let message = document.querySelector('.message');
-let score_title = document.querySelector('.score_title');
-
-let game_state = 'Start';
-img.style.display = 'none';
-message.classList.add('messageStyle');
-
-document.addEventListener('keydown', (e) => {
-    
-    if(e.key == 'Enter' && game_state != 'Play'){
-        document.querySelectorAll('.pipe_sprite').forEach((e) => {
-            e.remove();
-        });
-        img.style.display = 'block';
-        bird.style.top = '40vh';
-        game_state = 'Play';
-        message.innerHTML = '';
-        score_title.innerHTML = 'Score : ';
-        score_val.innerHTML = '0';
-        message.classList.remove('messageStyle');
-        play();
+class bird {
+  constructor() {
+    this.properties = {
+      "gravity" : 0.5,
+      'movementSpeed' : 3
     }
+
+    this.domElement = document.getElementById('bird-1')
+  }
+
+  reset() {
+    this.domElement.style.top = '40vh';
+    this.show();
+  }
+
+  get rect() {
+    return this.domElement.getBoundingClientRect();
+  }
+
+  hide() {
+    this.domElement.style.display = 'none';
+  }
+
+  show() {
+    this.domElement.style.display = 'block';
+  }
+};
+
+class pipeGenerator {
+  constructor() {
+    this.pipeSeparation = 0;
+    this.pipeGap = 35;
+  }
+
+  get pipes() {
+    return document.querySelectorAll('.pipe_sprite');
+  }
+
+  generate() {
+    /* if it's been long enough since the last pipe, generate a pipe */
+    if(this.pipeSeparation > 115){
+      /* reset for next iteration */
+      this.pipeSeparation = 0;
+
+      /* randomize y position between 8 and 51 */
+      let pipePosition = Math.floor(Math.random() * 43) + 8;
+
+      /* generate current top pipe */
+      let topPipe = document.createElement('div');
+      topPipe.className = 'pipe_sprite';
+      topPipe.style.top = pipePosition - 70 + 'vh';
+      topPipe.style.left = '100vw';
+      document.body.appendChild(topPipe);
+      
+      /* generate current bottom pipe */
+      let bottomPipe = document.createElement('div');
+      bottomPipe.className = 'pipe_sprite';
+      /* use pipe gap to calc y position */
+      bottomPipe.style.top = pipePosition + this.pipGap + 'vh';
+      bottomPipe.style.left = '100vw';
+      bottomPipe.increase_score = '1';
+      document.body.appendChild(bottomPipe);
+    }
+
+    this.pipeSeparation++;
+  }
+};
+
+class Game {
+  constructor() {
+    this.active = false;
+    this.bird = new bird();
+    this.pipeGen = new pipeGenerator();
+
+    this.properties = {
+      "score" : 0,
+      "soundPoint" : new Audio('./soundEffects/point.mp3'),
+      "soundDie" : new Audio('./soundEffects/die.mp3')
+    };
+
+    this.gameElement = document.getElementById('background');
+    this.scoreboard = document.getElementById('scoreboard');
+    this.scoreCount = document.getElementById('scoreCount');
+    this.message = document.getElementById('message');
+
+    this.reset();
+  }
+
+  reset() {
+    this.properties['score'] = 0;
+    this.bird.hide();
+    this.scoreboard.display = 'none';
+
+    this.message.classList.add('messageStyle');
+  }
+
+  get frameRect() {
+    return this.gameElement.getBoundingClientRect();
+  }
+
+  startGame() {
+    this.active = true;
+    this.bird.reset();
+
+    /* set score and show scoreboard */
+    this.scoreCount.textContent = this.properties['score'];
+    this.scoreboard.style.display = 'block';
+    
+    this.message.innerHTML = '';
+    this.message.classList.remove('messageStyle');
+
+    /* have to create anon function to ensure update receives this object */
+    window.requestAnimationFrame(() => {
+      this.update()
+    });
+  }
+
+  endGame() {
+    this.active = false;
+
+    this.message.innerHTML = 'Game Over'.fontcolor('red') + '<br>Press Enter To Restart';
+    this.message.classList.add('messageStyle');
+    this.bird.hide();
+    this.properties['soundDie'].play();
+  }
+
+  update() {
+    if(this.active == false) return;
+
+    this.play();
+    this.pipeGen.generate();
+    //this.bird.move();
+    window.requestAnimationFrame(() => {
+      this.update()
+    });
+  }
+
+  play() {
+    this.pipeGen.pipes.forEach((pipeElement) => {
+      const pipeRect = pipeElement.getBoundingClientRect();
+      const birdRect = this.bird.rect;
+
+      if (pipeRect.right <= 0) {
+          pipeElement.remove();
+      } else{
+          if (this.birdCollision(pipeRect)){
+            this.endGame();
+            return;
+          }else{
+              if(pipeRect.right < birdRect.left &&
+                 pipeRect.right + this.bird.properties['movementSpeed'] >= birdRect.left &&
+                 pipeElement.increase_score === '1'){
+                  score_val.innerHTML =+ score_val.innerHTML + 1;
+                  this.properties['soundPoint'].play();
+              }
+              pipeElement.style.left = pipeRect.left - this.bird.properties['movementSpeed'] + 'px';
+          }
+      }
+  });
+  }
+
+  birdCollision(pipeRect) {
+    const birdRect = this.bird.rect;
+    return birdRect.left < pipeRect.left + pipeRect.width &&
+           birdRect.left + birdRect.width > pipeRect.left &&
+           birdRect.top < pipeRect.top + pipeRect.height &&
+           birdRect.top + birdRect.height > pipeRect.top;
+  }
+};
+
+let game = new Game();
+
+/* start game */
+document.addEventListener('keydown', (e) => {
+  if(e.key == 'Enter' && !game.active){
+      game.pipeGen.pipes.forEach((pipeElement) => {
+          pipeElement.remove();
+      });
+
+      game.startGame();
+  }
 });
 
-function play(){
-    function move(){
-        if(game_state != 'Play') return;
 
-        let pipe_sprite = document.querySelectorAll('.pipe_sprite');
-        pipe_sprite.forEach((element) => {
-            let pipe_sprite_props = element.getBoundingClientRect();
-            bird_props = bird.getBoundingClientRect();
-
-            if(pipe_sprite_props.right <= 0){
-                element.remove();
-            }else{
-                if(bird_props.left < pipe_sprite_props.left + pipe_sprite_props.width && bird_props.left + bird_props.width > pipe_sprite_props.left && bird_props.top < pipe_sprite_props.top + pipe_sprite_props.height && bird_props.top + bird_props.height > pipe_sprite_props.top){
-                    game_state = 'End';
-                    message.innerHTML = 'Game Over'.fontcolor('red') + '<br>Press Enter To Restart';
-                    message.classList.add('messageStyle');
-                    img.style.display = 'none';
-                    sound_die.play();
-                    return;
-                }else{
-                    if(pipe_sprite_props.right < bird_props.left && pipe_sprite_props.right + move_speed >= bird_props.left && element.increase_score == '1'){
-                        score_val.innerHTML =+ score_val.innerHTML + 1;
-                        sound_point.play();
-                    }
-                    element.style.left = pipe_sprite_props.left - move_speed + 'px';
-                }
-            }
-        });
-        requestAnimationFrame(move);
-    }
-    requestAnimationFrame(move);
-
-    let bird_dy = 0;
-    function apply_gravity(){
-        if(game_state != 'Play') return;
-        bird_dy = bird_dy + grativy;
-        document.addEventListener('keydown', (e) => {
-            if(e.key == 'ArrowUp' || e.key == ' '){
-                img.src = '../../src/img/gameImages/LeFlappy/Bird-2.png';
-                bird_dy = -7.6;
-            }
-        });
-
-        document.addEventListener('keyup', (e) => {
-            if(e.key == 'ArrowUp' || e.key == ' '){
-                img.src = '../../src/img/gameImages/LeFlappy/Bird.png';
-            }
-        });
-
-        if(bird_props.top <= 0 || bird_props.bottom >= background.bottom){
-            game_state = 'End';
-            message.style.left = '28vw';
-            window.location.reload();
-            message.classList.remove('messageStyle');
-            return;
-        }
-        bird.style.top = bird_props.top + bird_dy + 'px';
-        bird_props = bird.getBoundingClientRect();
-        requestAnimationFrame(apply_gravity);
-    }
-    requestAnimationFrame(apply_gravity);
-
-    let pipe_seperation = 0;
-
-    let pipe_gap = 35;
-
-    function create_pipe(){
-        if(game_state != 'Play') return;
-
-        if(pipe_seperation > 115){
-            pipe_seperation = 0;
-
-            let pipe_posi = Math.floor(Math.random() * 43) + 8;
-            let pipe_sprite_inv = document.createElement('div');
-            pipe_sprite_inv.className = 'pipe_sprite';
-            pipe_sprite_inv.style.top = pipe_posi - 70 + 'vh';
-            pipe_sprite_inv.style.left = '100vw';
-
-            document.body.appendChild(pipe_sprite_inv);
-            let pipe_sprite = document.createElement('div');
-            pipe_sprite.className = 'pipe_sprite';
-            pipe_sprite.style.top = pipe_posi + pipe_gap + 'vh';
-            pipe_sprite.style.left = '100vw';
-            pipe_sprite.increase_score = '1';
-
-            document.body.appendChild(pipe_sprite);
-        }
-        pipe_seperation++;
-        requestAnimationFrame(create_pipe);
-    }
-    requestAnimationFrame(create_pipe);
-}

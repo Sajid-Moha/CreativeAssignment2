@@ -15,7 +15,7 @@
 
 .background {
   /* colors */
-	background: url('images/background-img.png') no-repeat center fixed !important;
+	background: url('../../src/img/gameImages/LeFlappy/background-img.png') no-repeat center fixed !important;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -64,7 +64,7 @@
   /* text */
 }
 
-.message {
+#message {
   /* colors */
 
   /* sizing */
