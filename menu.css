@@ -1,3 +1,11 @@
+/* Extra space for game menu */
+nav {
+  margin-bottom: 3em;
+}
+footer {
+  margin-top: 3em;
+}
+
 .gameMenu {
   /* colors */
   background-color: #552583;

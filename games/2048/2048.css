@@ -31,8 +31,9 @@
   justify-content: center;
   align-items: center;
   
-  width: 8vw;
-  height: 8vw;
+  width: 25%;
+  aspect-ratio: 1;
+  margin: 2px;
 }
 
 .tile::before {
@@ -53,7 +54,20 @@
   filter: blur(3px) brightness(.8);
 }
 
-.tile::after {
+.tImage {
+  position: relative;
+  z-index: 1000;
+
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+
+.tImage[src=""] {
+  display: none;
+}
+
+/* .tile::after {
   content: "";
   position: absolute;
   top: 10%;
@@ -66,12 +80,13 @@
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+} */
+
+/* media queries */
+@media (max-width: 700px) {
+  #board {
+    width: 80vw;
+    height: 80vw;
+  }
 }
 
-.header {
-  margin-bottom: none;
-}
-
-.footer {
-  margin-top: none;
-}

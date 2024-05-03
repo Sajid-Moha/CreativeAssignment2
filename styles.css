@@ -121,3 +121,10 @@ a, a:hover, a:active, a:visited, a:focus {
     grid-template-columns: repeat(1, 1fr);
   }
 }
+
+nav {
+  margin: 0;
+}
+footer {
+  margin: 0;
+}

@@ -133,40 +133,33 @@ class Game {
 };
 
 
-const colorDict = {
-  0: '#FFFFFF',
-  2: '#8D7273',
-  4: '#8D728A',
-  8: '#8D72A6',
-  16: '#8D72C6',
-  32: '#8D72D7',
-  64: '#8D72EA',
-  128: '#8D72F7',
-  256: '#843F5E',
-  512: '#B53F5E',
-  1024: '#D13F5E',
-  2048: '#D13F5E',
-  4096: '#FF3F5E' 
+const imgDict = {
+  0: '',
+  2: '../../src/img/gameImages/2048/2.png',
+  4: '../../src/img/gameImages/2048/4.png',
+  8: '../../src/img/gameImages/2048/8.png',
+  16: '../../src/img/gameImages/2048/16.png',
+  32: '../../src/img/gameImages/2048/32.png',
+  64: '../../src/img/gameImages/2048/64.png',
+  128: '../../src/img/gameImages/2048/128.png',
+  256: '../../src/img/gameImages/2048/256.png',
+  512: '../../src/img/gameImages/2048/512.png',
+  1024: '../../src/img/gameImages/2048/1024.png',
+  2048: '../../src/img/gameImages/2048/2048.png',
 };
 
-let b = [[2, 2, 2, 2],
-         [2, 2, 2, 2],
-         [2, 2, 2, 2],
-         [2, 2, 2, 2]];
 let curBoard = new Game();
 const visualBoard = document.getElementById('board');
 
 function updateVisualBoard(board) {
   let cur_row = visualBoard.firstElementChild;
   board.forEach((row) => {
+    console.log(row)
     let cur_tile = cur_row.firstElementChild;
-    row.forEach((tile_value) => {
-      cur_tile.innerText = tile_value;
-      if (tile_value == 0) {
-        cur_tile.innerText = "";
-      }
 
-      cur_tile.style.backgroundColor = colorDict[tile_value];
+    row.forEach((tile_value) => {
+      let cur_image = cur_tile.firstElementChild;
+      cur_image.src = imgDict[tile_value]
 
       cur_tile = cur_tile.nextElementSibling;
     });
@@ -176,6 +169,7 @@ function updateVisualBoard(board) {
 curBoard.generateValue();
 updateVisualBoard(curBoard.board);
 document.addEventListener('keydown', function(event) {
+
   // create deep copy of boardState
   oldBoard = curBoard.board.map(innerArray => innerArray.slice());
 
