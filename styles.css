@@ -85,6 +85,7 @@ footer {
 
 a, a:hover, a:active, a:visited, a:focus {
   text-decoration:none;
+  color: inherit;
 }
 
 /* custom classes */
@@ -100,90 +101,6 @@ a, a:hover, a:active, a:visited, a:focus {
   text-decoration: none;
   text-align: center;
   font-weight: 900;
-}
-
-.gameMenu {
-  /* colors */
-  background-color: #552583;
-  border-radius: 10%;
-
-  box-shadow: 0px 0px 30px #FDB927;
-
-  /* sizing */
-  /* width: 90%; */
-  padding: 2%;
-  
-  /* alignment */
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 5px;
-
-  /* text */
-  text-align: center;
-}
-
-.gameMenu a:first-child {
-  border-radius: 10% 0 0 0;
-}
-
-.gameMenu a:nth-child(2) {
-  border-radius: 0 10% 0 0;
-}
-
-.gameMenu a:nth-child(3) {
-  border-radius: 0 0 0 10%;
-}
-
-.gameMenu a:nth-child(4) {
-  border-radius: 0 0 10% 0;
-}
-
-
-
-
-.gameMenu > a {
-  text-decoration: none;
-  color: black;
-}
-
-.gameMenu > a:hover {
-  text-decoration: none;
-  color: black;
-}
-
-.gameOption {
-  /* colors */
-  background-color: #FDB927;
-
-  /* sizing */
-  padding: 20px;
-
-  /* alignment */
-  position: relative;
-
-  /* text */
-
-  /* animation */
-  transition: 5ms;
-}
-
-.gameOption:hover {
-  cursor: pointer;
-  transform: scale(1.05);
-}
-
-.gameImage {
-  /* colors */
-  border: 3px solid white;
-
-  /* sizing */
-  width: 10em;
-  aspect-ratio: 1;
-
-  /* alignment */
-  margin-bottom: 1em;
-
-  /* text */
 }
 
 #copyrightTag {

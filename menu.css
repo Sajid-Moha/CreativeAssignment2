@@ -1,0 +1,86 @@
+.gameMenu {
+  /* colors */
+  background-color: #552583;
+  border-radius: 10%;
+
+  box-shadow: 0px 0px 30px #FDB927;
+
+  /* sizing */
+  /* width: 90%; */
+  padding: 2%;
+  
+  /* alignment */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 5px;
+
+  /* text */
+  text-align: center;
+}
+
+/* Top Left Game */
+.gameMenu a:first-child {
+  border-radius: 10% 0 0 0;
+}
+
+.gameMenu a:first-child:hover  {
+  transform: translate(-2%, -2%);
+}
+
+/* Top Right Game */
+.gameMenu a:nth-child(2) {
+  border-radius: 0 10% 0 0;
+}
+
+.gameMenu a:nth-child(2):hover {
+  transform: translate(2%, -2%);
+}
+
+/* Bottom Left Game */
+.gameMenu a:nth-child(3) {
+  border-radius: 0 0 0 10%;
+}
+
+.gameMenu a:nth-child(3):hover {
+  transform: translate(-2%, 2%);
+}
+
+/* Bottom Right Game */
+.gameMenu a:nth-child(4) {
+  border-radius: 0 0 10% 0;
+}
+
+.gameMenu a:nth-child(4):hover {
+  transform: translate(2%, 2%);
+}
+
+.gameOption {
+  /* colors */
+  background-color: #FDB927;
+
+  /* sizing */
+  padding: 20px;
+
+  /* alignment */
+  position: relative;
+
+  /* text */
+
+  /* animation */
+  transition: 5ms;
+}
+
+
+.gameImage {
+  /* colors */
+  border: 3px solid white;
+
+  /* sizing */
+  width: 10em;
+  aspect-ratio: 1;
+
+  /* alignment */
+  margin-bottom: 1em;
+
+  /* text */
+}
