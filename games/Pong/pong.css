@@ -3,10 +3,10 @@
   min-height: 80vh;
 
   background-color: wheat;
-  background-image: url(../../src/img/cavs.png);
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
+  background-image: url(../../src/img/gameImages/cavs.png), url(../../src/img/gameImages/hardwood.jpg);
+  background-size: contain, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
 
   position: relative;
   overflow: hidden;
