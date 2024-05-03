@@ -1,3 +1,12 @@
+/* Sajid's Styles */
+#gameFrame {
+  width: 100%;
+  min-height: 80vh;
+
+  position: relative;
+  overflow: hidden;
+}
+
 /* HTML Tag Styles */
 * {
   /* colors */
@@ -22,8 +31,8 @@
     background-size: cover;
 
   /* sizing */
-	height: 100vh;
-	width: 100vw;
+	min-height: 80vh;
+	width: 100%;
 
   /* alignment */
 
@@ -57,7 +66,7 @@
 	width: 6vw;
 
   /* alignment */
-  position: fixed;
+  position: absolute;
 	top: 40vh;
 	left: 100vw;
 
@@ -71,9 +80,9 @@
 
   /* alignment */
 	position: absolute;
-  top: 30%;
+  top: 10%;
 	left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%);
 	z-index: 10;
 
   /* text */
@@ -107,7 +116,7 @@
 	margin: 10px;
 
   /* alignment */
-  position: fixed;
+  position: absolute;
   top: 0;
 	left: 0;
 	z-index: 10;

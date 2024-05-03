@@ -46,8 +46,8 @@ class bird {
     });
 
     /* ensure inbounds */
-    const bounds = document.getElementById('background').getBoundingClientRect;
-    if(this.rect.top <= 0 || this.rect.bottom >= bounds.bottom){
+    const bounds = document.getElementById('gameFrame').getBoundingClientRect();
+    if(this.rect.top <= bounds.top || this.rect.bottom >= bounds.bottom){
         return false;
     }
 
@@ -60,6 +60,7 @@ class pipeGenerator {
   constructor() {
     this.pipeSeparation = 0;
     this.pipeGap = 35;
+    this.gameFrame = document.getElementById('gameFrame');
   }
 
   get pipes() {
@@ -80,7 +81,7 @@ class pipeGenerator {
       topPipe.className = 'pipe_sprite';
       topPipe.style.top = pipePosition - 70 + 'vh';
       topPipe.style.left = '100vw';
-      document.body.appendChild(topPipe);
+      this.gameFrame.appendChild(topPipe);
       
       /* generate current bottom pipe */
       let bottomPipe = document.createElement('div');
@@ -89,7 +90,7 @@ class pipeGenerator {
       bottomPipe.style.top = pipePosition + this.pipeGap + 'vh';
       bottomPipe.style.left = '100vw';
       bottomPipe.increase_score = '1';
-      document.body.appendChild(bottomPipe);
+      this.gameFrame.appendChild(bottomPipe);
     }
 
     this.pipeSeparation++;
