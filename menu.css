@@ -110,3 +110,49 @@ footer {
     padding: 10px;
   }
 }
+
+
+/* tool tips */
+.tooltip {
+    /* colors */
+    display: none;
+    background-color: #FDB927;
+
+    /* sizing */
+    width: 100%;
+    padding: 1em;
+    border-radius: 5px;
+    
+  
+    /* alignment */
+    top: 50%;
+    transform: translateY(-50%);
+    position: absolute;
+    z-index: 1000;
+    
+  
+    /* text */
+    font-weight: 700;
+
+}
+
+/* media queries */
+@media (max-width: 650px) {
+  .tooltip {
+    width: 5em;
+  }
+}
+
+.left {
+  right: 110%;
+}
+
+.right {
+  left: 110%;
+}
+
+.gameOption:hover {
+  .tooltip {
+    display: block;
+  }
+}
