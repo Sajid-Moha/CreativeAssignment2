@@ -302,8 +302,9 @@ function endVisuals(win, boardElement) {
   const restart = restartVisual(message);
   main.appendChild(restart);
 
-  const reset = document.getElementById('resetter');
+  const reset = document.getElementById('reset');
   reset.addEventListener('click', (e) => {
+    console.log('click')
     boardElement.style.display = 'flex';
     restart.remove()
     curBoard.reset();
