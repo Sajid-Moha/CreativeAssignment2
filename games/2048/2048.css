@@ -51,7 +51,7 @@
   background-position: center;
   background-repeat: no-repeat;
 
-  filter: blur(3px) brightness(.8);
+  filter: blur(1px) brightness(.8);
 }
 
 .tImage {
