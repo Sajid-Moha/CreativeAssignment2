@@ -33,7 +33,7 @@ class bird {
     /* flap animation start */
     document.addEventListener('keydown', (e) => {
         if(e.key == 'ArrowUp' || e.key == ' '){
-            this.domElement.src = '../../src/img/gameImages/LeFlappy/Bird-2.png';
+            this.domElement.src = '../../src/img/gameImages/LeFlappy/squishedBall.png';
             this.dy = -7.6;
         }
     });
@@ -41,7 +41,7 @@ class bird {
     /* flap animation end */
     document.addEventListener('keyup', (e) => {
         if(e.key == 'ArrowUp' || e.key == ' '){
-            this.domElement.src = '../../src/img/gameImages/LeFlappy/Bird.png';
+            this.domElement.src = '../../src/img/gameImages/bball.png';
         }
     });
 
