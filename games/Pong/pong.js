@@ -47,9 +47,16 @@ class Game {
       if (scoreChange === -1) this.computerPoints += 1;
       this.resetPositions();
 
-      console.log(`${this.userPoints} - ${this.computerPoints}`)
+      this.updateScoreVisual();
     }
     this.comp.updatePosition(this.ball.properties.position['x'], deltaTime);
+  }
+
+  userScoreVisual = document.getElementById('userScore');
+  compScoreVisual = document.getElementById('compScore');
+  updateScoreVisual() {
+    this.userScoreVisual.textContent = this.userPoints;
+    this.compScoreVisual.textContent = this.computerPoints;
   }
 };
 
