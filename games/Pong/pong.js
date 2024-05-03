@@ -1,12 +1,13 @@
-let userPoints = 0;
-let computerPoints = 0;
-
 class Game {
+
   /**
    * 
    * @param {HTMLElement[]} obstacles - DOM elements ball should bounce off of
    */
   constructor(obstacles) {
+    this.userPoints = 0;
+    this.computerPoints = 0;
+
     this.ball = new Ball(obstacles);
     this.user = new UserPaddle();
     this.comp = new compPaddle();
@@ -17,6 +18,12 @@ class Game {
     document.addEventListener('keyup', (event) => { 
       this.user.keyupBehavior(event);
     });
+  }
+
+  resetPositions() {
+    this.ball.reset();
+    this.user.reset();
+    this.comp.reset();
   }
 
   prevTimestamp;
@@ -34,7 +41,14 @@ class Game {
       }
     }
     
-    this.ball.updateBallPosition(deltaTime);
+    const scoreChange = this.ball.updateBallPosition(deltaTime);
+    if (scoreChange != 0) {
+      if (scoreChange === 1) this.userPoints += 1;
+      if (scoreChange === -1) this.computerPoints += 1;
+      this.resetPositions();
+
+      console.log(`${this.userPoints} - ${this.computerPoints}`)
+    }
     this.comp.updatePosition(this.ball.properties.position['x'], deltaTime);
   }
 };
@@ -99,8 +113,10 @@ class Ball {
     this.properties['position']['x'] = newX;
     this.properties['position']['y'] = newY;
     this.#updateBallVisual();
-    this.#keepBallInbounds();
     this.#avoidObstacles();
+    
+    const scoreChange = this.#keepBallInbounds();
+    return scoreChange;
   }
   
   #updateBallVisual() {
@@ -123,9 +139,13 @@ class Ball {
     const exitBottom = ballRect.bottom >= boundingBoxRect.bottom
     const dy = this.properties['direction']['y'];
     if ((exitBottom && dy > 0) || (exitTop && dy < 0)) {
-      //this.endRound((exitTop && dy < 0), this.resets);
-      this.properties['direction']['y'] *= -1;
+      if (exitTop) {
+        return 1;
+      } else {
+        return -1;
+      }
     }
+    return 0;
   }
 
   #avoidObstacles() {
@@ -154,18 +174,6 @@ class Ball {
         this.properties['direction']['y'] *= -1;
       }
     });
-  }
-
-  endRound(userPoint, resets) {
-    if (userPoint) userPoint += 1;
-    else computerPoints += 1;
-
-    this.reset();
-    resets.forEach((res) => {
-      res();
-    });
-
-    alert(userPoint, computerPoints)
   }
 };
 
@@ -242,26 +250,39 @@ class compPaddle {
   }
 };
 
-/* ball updates */
-{
+/* frame updates */
+window.requestAnimationFrame(gameCycle);
+
+const U_P = document.getElementById('userPaddle');
+const COMP_P = document.getElementById('compPaddle');
+let game = new Game([U_P, COMP_P]);
+
+function gameCycle(timestamp) {
+  game.gameCycle(timestamp);
   window.requestAnimationFrame(gameCycle);
-
-
-  /* user paddle behavior */
-  let user = new UserPaddle();
-
-
-  /* comp paddle behavior */
-  let comp = new compPaddle();
-
-  const U_P = document.getElementById('userPaddle');
-  const COMP_P = document.getElementById('compPaddle');
-  let ball = new Ball([U_P, COMP_P]);
-
-  let game = new Game([U_P, COMP_P]);
-
-  function gameCycle(timestamp) {
-    game.gameCycle(timestamp);
-    window.requestAnimationFrame(gameCycle);
-  }
 }
+
+let b_speed = Ball.INITIAL_VELOCITY;
+let u_speed = UserPaddle.USER_VELOCITY;
+let c_speed = compPaddle.COMP_VELOCITY;
+
+let pause_counter = 1;
+document.addEventListener('keydown', (e) => {
+  if (e.key == ' ') {
+    if (pause_counter % 2 != 0) {
+      b_speed = Ball.INITIAL_VELOCITY;
+      u_speed = UserPaddle.USER_VELOCITY;
+      c_speed = compPaddle.COMP_VELOCITY;
+
+      game.ball.properties.velocity = 0;
+      UserPaddle.USER_VELOCITY = 0;
+      compPaddle.COMP_VELOCITY = 0;
+    } else {
+      game.ball.properties.velocity = b_speed;
+      UserPaddle.USER_VELOCITY = u_speed;
+      compPaddle.COMP_VELOCITY = c_speed;
+    }
+
+    pause_counter += 1;
+  }
+});
