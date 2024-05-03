@@ -81,12 +81,15 @@
   
   /* sizing */
   width: 50%;
-  height: 4em;
   padding: 1em;
   margin-top: 2em;
   border-radius: 5px;
 
   /* alignment */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   /* text */
 
