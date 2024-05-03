@@ -35,7 +35,7 @@ class Game {
     let won = false;
     this.board.forEach((row) => {
       row.forEach((value) => {
-        if (value == 2048) {
+        if (value === 2048) {
           won = true;
           return;
         }
@@ -54,7 +54,7 @@ class Game {
     // check rows
     this.board.forEach((row) => {
       for (let i = 1; i < row.length; i++) {
-        if (row[i] == row[i - 1]) {
+        if (row[i] === row[i - 1]) {
           winnable = true;
           return;
         }
@@ -65,7 +65,7 @@ class Game {
     for (let i = 0; i < this.board.length; i++) {
       const curCol = this.#getCol(i);
       for (let j = 1; j < curCol.length; j++) {
-        if (curCol[j] == curCol[j - 1]) {
+        if (curCol[j] === curCol[j - 1]) {
           winnable = true;
           return;
         }
@@ -84,7 +84,7 @@ class Game {
 
     for (let row = 0; row < this.numRows; row++) {
       for (let col = 0; col < this.numCols; col++) {
-        if (this.board[row][col] == 0) {
+        if (this.board[row][col] === 0) {
           this.emptyPositions.push([row, col]);
         }
       }
@@ -160,7 +160,7 @@ class Game {
 
   shiftUp() {
     for (let col = 0; col < this.numCols; col++) {
-      let cur_col = this.#getCol(col);
+      const cur_col = this.#getCol(col);
       this.#shiftRowLeft(cur_col);
       this.#updateCol(col, cur_col);
     }
@@ -169,7 +169,7 @@ class Game {
 
   shiftDown() {
     for (let col = 0; col < this.numCols; col++) {
-      let cur_col = this.#getCol(col);
+      const cur_col = this.#getCol(col);
       this.#shiftRowRight(cur_col);
       this.#updateCol(col, cur_col);
     }
@@ -260,13 +260,13 @@ function restartVisual(message) {
 
 function endVisuals(win, boardElement) {
   boardElement.style.display = 'none';
-  let message = win ? "You Win! :D" : "You Lose! :(";
+  const message = win ? "You Win! :D" : "You Lose! :(";
 
   const main = document.getElementsByTagName('main')[0];
   const restart = restartVisual(message);
   main.appendChild(restart);
 
-  let reset = document.getElementById('resetter');
+  const reset = document.getElementById('resetter');
   reset.addEventListener('click', (e) => {
     boardElement.style.display = 'flex';
     restart.remove()
@@ -371,7 +371,8 @@ function swipeDirection(xS, yS, xE, yE) {
  * {float} xStart : x coordinate of the start of current swipe
  * {float} yStart : y coordinate of the start of current swipe 
  */
-let xStart, yStart;
+let xStart;
+let yStart;
 
 visualBoard.addEventListener('touchstart', (e) => {
   xStart = e.changedTouches[0].clientX;
