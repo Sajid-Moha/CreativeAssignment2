@@ -5,7 +5,7 @@ class bird {
       'movementSpeed' : 3
     }
 
-    this.domElement = document.getElementById('bird-1')
+    this.domElement = document.getElementById('bird-1');
   }
 
   reset() {
@@ -23,6 +23,36 @@ class bird {
 
   show() {
     this.domElement.style.display = 'block';
+  }
+
+  dy = 0;
+  move() {
+    /* apply gravity at each cycle */
+    this.dy += this.properties['gravity'];
+
+    /* flap animation start */
+    document.addEventListener('keydown', (e) => {
+        if(e.key == 'ArrowUp' || e.key == ' '){
+            this.domElement.src = '../../src/img/gameImages/LeFlappy/Bird-2.png';
+            this.dy = -7.6;
+        }
+    });
+
+    /* flap animation end */
+    document.addEventListener('keyup', (e) => {
+        if(e.key == 'ArrowUp' || e.key == ' '){
+            this.domElement.src = '../../src/img/gameImages/LeFlappy/Bird.png';
+        }
+    });
+
+    /* ensure inbounds */
+    const bounds = document.getElementById('background').getBoundingClientRect;
+    if(this.rect.top <= 0 || this.rect.bottom >= bounds.bottom){
+        return false;
+    }
+
+    this.domElement.style.top = this.rect.top + this.dy + 'px';
+    return true;
   }
 };
 
@@ -56,7 +86,7 @@ class pipeGenerator {
       let bottomPipe = document.createElement('div');
       bottomPipe.className = 'pipe_sprite';
       /* use pipe gap to calc y position */
-      bottomPipe.style.top = pipePosition + this.pipGap + 'vh';
+      bottomPipe.style.top = pipePosition + this.pipeGap + 'vh';
       bottomPipe.style.left = '100vw';
       bottomPipe.increase_score = '1';
       document.body.appendChild(bottomPipe);
@@ -129,7 +159,10 @@ class Game {
 
     this.play();
     this.pipeGen.generate();
-    //this.bird.move();
+    if (!this.bird.move()) {
+      this.endGame();
+    }
+
     window.requestAnimationFrame(() => {
       this.update()
     });
@@ -150,7 +183,7 @@ class Game {
               if(pipeRect.right < birdRect.left &&
                  pipeRect.right + this.bird.properties['movementSpeed'] >= birdRect.left &&
                  pipeElement.increase_score === '1'){
-                  score_val.innerHTML =+ score_val.innerHTML + 1;
+                  this.scoreCount.innerText = parseInt(this.scoreCount.innerText) + 1;
                   this.properties['soundPoint'].play();
               }
               pipeElement.style.left = pipeRect.left - this.bird.properties['movementSpeed'] + 'px';
