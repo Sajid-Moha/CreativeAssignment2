@@ -1,6 +1,48 @@
+let userPoints = 0;
+let computerPoints = 0;
+
+class Game {
+  /**
+   * 
+   * @param {HTMLElement[]} obstacles - DOM elements ball should bounce off of
+   */
+  constructor(obstacles) {
+    this.ball = new Ball(obstacles);
+    this.user = new UserPaddle();
+    this.comp = new compPaddle();
+
+    document.addEventListener('keydown', (event) => { 
+      this.user.keydownBehavior(event);
+    });
+    document.addEventListener('keyup', (event) => { 
+      this.user.keyupBehavior(event);
+    });
+  }
+
+  prevTimestamp;
+  gameCycle(timestamp) {
+    if (this.prevTimestamp == undefined) this.prevTimestamp = timestamp;
+
+    const deltaTime = timestamp - this.prevTimestamp;
+    this.prevTimestamp = timestamp;
+
+    if (this.user.move.size == 1) {
+      if (this.user.move.has('left')) {
+        this.user.updatePosition(-1, deltaTime);
+      } else if (this.user.move.has('right')) {
+        this.user.updatePosition(1, deltaTime);
+      }
+    }
+    
+    this.ball.updateBallPosition(deltaTime);
+    this.comp.updatePosition(this.ball.properties.position['x'], deltaTime);
+  }
+};
+
 class Ball {
   /* constant values */
   static INITIAL_VELOCITY = .08; // (delta position / delta time)
+  resets = [];
 
   gameFrame = document.getElementById('gameFrame');
   ballElement = document.getElementById('ball');
@@ -13,7 +55,7 @@ class Ball {
   }
 
   reset() {
-    this.ball = {
+    this.properties = {
       'direction': this.#generateStartDirection(),
       'velocity': Ball.INITIAL_VELOCITY,
       'position': { 'x': 50, 'y': 50 }
@@ -48,22 +90,22 @@ class Ball {
   }
 
   updateBallPosition(deltaTime) {
-    const deltaX = this.ball['velocity'] * deltaTime * this.ball['direction']['x'];
-    const deltaY = this.ball['velocity'] * deltaTime * this.ball['direction']['y'];
+    const deltaX = this.properties['velocity'] * deltaTime * this.properties['direction']['x'];
+    const deltaY = this.properties['velocity'] * deltaTime * this.properties['direction']['y'];
   
-    let newX = this.ball['position']['x'] + deltaX;
-    let newY = this.ball['position']['y'] + deltaY;
+    let newX = this.properties['position']['x'] + deltaX;
+    let newY = this.properties['position']['y'] + deltaY;
   
-    this.ball['position']['x'] = newX;
-    this.ball['position']['y'] = newY;
+    this.properties['position']['x'] = newX;
+    this.properties['position']['y'] = newY;
     this.#updateBallVisual();
     this.#keepBallInbounds();
     this.#avoidObstacles();
   }
   
   #updateBallVisual() {
-    this.ballElement.style.top = `${this.ball['position']['y']}%`;
-    this.ballElement.style.left = `${this.ball['position']['x']}%`;
+    this.ballElement.style.top = `${this.properties['position']['y']}%`;
+    this.ballElement.style.left = `${this.properties['position']['x']}%`;
   }
   
   #keepBallInbounds() {
@@ -72,17 +114,17 @@ class Ball {
   
     const exitLeft = ballRect.left <= 0;
     const exitRight = ballRect.right >= window.innerWidth;
-    const dx = this.ball['direction']['x'];
+    const dx = this.properties['direction']['x'];
     if ((exitLeft && dx < 0) || (exitRight && dx > 0)) {
-      this.ball['direction']['x'] *= -1;;
+      this.properties['direction']['x'] *= -1;
     }
 
     const exitTop = ballRect.top <= boundingBoxRect.top;
     const exitBottom = ballRect.bottom >= boundingBoxRect.bottom
-    const dy = this.ball['direction']['y'];
+    const dy = this.properties['direction']['y'];
     if ((exitBottom && dy > 0) || (exitTop && dy < 0)) {
-      //this.reset();
-      this.ball['direction']['y'] *= -1;;
+      //this.endRound((exitTop && dy < 0), this.resets);
+      this.properties['direction']['y'] *= -1;
     }
   }
 
@@ -92,8 +134,8 @@ class Ball {
     this.obstacles.forEach((obstacle) => {
       const oRect = obstacle.getBoundingClientRect();
 
-      const dx = this.ball['direction']['x'];
-      const dy = this.ball['direction']['y'];
+      const dx = this.properties['direction']['x'];
+      const dy = this.properties['direction']['y'];
 
       const withinWidth = (ballRect.left <= oRect.right && ballRect.left >= oRect.left) ||
                           (ballRect.right <= oRect.right && ballRect.right >= oRect.left);
@@ -106,12 +148,24 @@ class Ball {
       const intersectBottom = ballRect.top >= oRect.top && ballRect.top <= oRect.bottom && withinWidth;
 
       if (false && intersectRight && dx < 0 || intersectLeft && dx > 0) {
-        this.ball['direction']['x'] *= -1;
+        this.properties['direction']['x'] *= -1;
       }
       if (intersectTop && dy > 0 || intersectBottom && dy < 0) {
-        this.ball['direction']['y'] *= -1;
+        this.properties['direction']['y'] *= -1;
       }
     });
+  }
+
+  endRound(userPoint, resets) {
+    if (userPoint) userPoint += 1;
+    else computerPoints += 1;
+
+    this.reset();
+    resets.forEach((res) => {
+      res();
+    });
+
+    alert(userPoint, computerPoints)
   }
 };
 
@@ -160,40 +214,54 @@ class UserPaddle {
   }
 };
 
+class compPaddle {
+  /* const variables */
+  static COMP_VELOCITY = .08;
+
+  constructor() {
+    this.reset();
+    this.move = new Set();
+  }
+
+  reset() {
+    this.paddle = {
+      'x': 50,
+      'y': 10 // will never change
+    };
+  }
+
+  updatePosition(goal_location, deltaTime) {
+    this.paddle['x'] += compPaddle.COMP_VELOCITY * (goal_location - this.paddle['x']) * deltaTime;
+
+    this.#updatePaddleVisual();
+  }
+
+  #updatePaddleVisual() {
+    const paddleElement = document.getElementById('compPaddle');
+    paddleElement.style.left = `${this.paddle['x']}%`;
+  }
+};
+
 /* ball updates */
 {
   window.requestAnimationFrame(gameCycle);
 
-  let lastTimestamp;
-  
+
+  /* user paddle behavior */
+  let user = new UserPaddle();
+
+
+  /* comp paddle behavior */
+  let comp = new compPaddle();
+
   const U_P = document.getElementById('userPaddle');
   const COMP_P = document.getElementById('compPaddle');
   let ball = new Ball([U_P, COMP_P]);
 
-  /* user paddle behavior */
-  let user = new UserPaddle();
-  document.addEventListener('keydown', (event) => { 
-    user.keydownBehavior(event);
-  });
-  document.addEventListener('keyup', (event) => { 
-    user.keyupBehavior(event);
-  });
+  let game = new Game([U_P, COMP_P]);
 
   function gameCycle(timestamp) {
-    if (lastTimestamp == undefined) lastTimestamp = timestamp;
-
-    const deltaTime = timestamp - lastTimestamp;
-    lastTimestamp = timestamp;
-
-    if (user.move.size == 1) {
-      if (user.move.has('left')) {
-        user.updatePosition(-1, deltaTime);
-      } else if (user.move.has('right')) {
-        user.updatePosition(1, deltaTime);
-      }
-    }
-    ball.updateBallPosition(deltaTime);
-
+    game.gameCycle(timestamp);
     window.requestAnimationFrame(gameCycle);
   }
 }
