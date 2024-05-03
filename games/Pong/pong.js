@@ -231,7 +231,7 @@ class UserPaddle {
 
 class compPaddle {
   /* const variables */
-  static COMP_VELOCITY = .01;
+  static COMP_VELOCITY = .05;
 
   constructor() {
     this.reset();
@@ -293,24 +293,4 @@ document.addEventListener('keydown', (e) => {
 
     pause_counter += 1;
   }
-});
-
-/* select difficulty using radio buttons */
-const difficultyButtons = document.querySelectorAll('input[name="difficulty"]');
-difficultyButtons.forEach((button) => {
-  button.addEventListener('change', (e) => {
-    switch(e.target.value) {
-      case (0):
-        compPaddle.COMP_VELOCITY = .01;
-        break;
-      case (1):
-        compPaddle.COMP_VELOCITY = .05;
-        break;
-      case (2):
-        compPaddle.COMP_VELOCITY = .08;
-        break;
-      default:
-        break;
-    }
-  });
 });
