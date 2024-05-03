@@ -132,7 +132,6 @@ class Game {
   }
 };
 
-
 const imgDict = {
   0: '',
   2: '../../src/img/gameImages/2048/2.png',
@@ -166,8 +165,10 @@ function updateVisualBoard(board) {
     cur_row = cur_row.nextElementSibling;
   });
 }
+
 curBoard.generateValue();
 updateVisualBoard(curBoard.board);
+
 document.addEventListener('keydown', function(event) {
 
   // create deep copy of boardState
@@ -206,3 +207,59 @@ function compareBoards(b1, b2) {
 
   return true;
 }
+
+// supporting swipe gestures
+function swipeDirection(xS, yS, xE, yE) {
+  const dx = xS - xE;
+  const xDir = dx / Math.abs(dx);
+  const dy = yS - yE;
+  const yDir = dy / Math.abs(dy);
+
+  // whichever axis had more movement will be our swipe axis
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    return xDir * 2;
+  } else {
+    return yDir * 3;
+  }
+}
+
+let xStart, yStart;
+visualBoard.addEventListener('touchstart', (e) => {
+  xStart = e.changedTouches[0].clientX;
+  yStart = e.changedTouches[0].clientY;
+});
+
+visualBoard.addEventListener('touchend', (e) => {
+  // create deep copy of boardState
+  oldBoard = curBoard.board.map(innerArray => innerArray.slice());
+
+  const xEnd = e.changedTouches[0].clientX;
+  const yEnd = e.changedTouches[0].clientY;
+  const dir = swipeDirection(xStart, yStart, xEnd, yEnd)
+
+  switch (dir) {
+    case -2:
+      // swipe right
+      curBoard.shiftRight();
+      break;
+    case 2:
+      // swipe left
+      curBoard.shiftLeft();
+      break;
+    case 3:
+      // swipe up
+      curBoard.shiftUp();
+      break;
+    case -3:
+      // swipe down
+      curBoard.shiftDown();
+      break;
+    default:
+      break;
+  }
+
+  if (!compareBoards(oldBoard, curBoard.board)) {
+    curBoard.generateValue();
+  }
+  updateVisualBoard(curBoard.board);
+});
