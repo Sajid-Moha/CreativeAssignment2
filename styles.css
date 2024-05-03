@@ -83,6 +83,9 @@ footer {
   text-align: right;
 }
 
+a, a:hover, a:active, a:visited, a:focus {
+  text-decoration:none;
+}
 
 /* custom classes */
 #siteTitle {
@@ -94,6 +97,7 @@ footer {
   /* alignment */
 
   /* text */
+  text-decoration: none;
   text-align: center;
   font-weight: 900;
 }

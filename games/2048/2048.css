@@ -34,3 +34,11 @@
   width: 8vw;
   height: 8vw;
 }
+
+.header {
+  margin-bottom: none;
+}
+
+.footer {
+  margin-top: none;
+}
