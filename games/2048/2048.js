@@ -283,7 +283,7 @@ let test_b = [[1024, 1024, 0, 0],
          [0, 0, 0, 0],
          [0, 0, 0, 0],
          [0, 0, 0, 0]];
-let curBoard = new Game(test_b);
+let curBoard = new Game();
 
 /* draw initial board */
 const visualBoard = document.getElementById('board');
