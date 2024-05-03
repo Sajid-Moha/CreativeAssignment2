@@ -23,9 +23,9 @@
 }
 
 .tile {
-  background-color: white;
-  border: 1px solid black;
-  border-radius: 5px;
+  position: relative;
+  background-color: orange;
+  border-radius: 50%;
 
   display: flex;
   justify-content: center;
@@ -33,6 +33,39 @@
   
   width: 8vw;
   height: 8vw;
+}
+
+.tile::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background-color: orange;
+  border-radius: 50%;
+  background-image: url(../../src/img/gameImages/bball.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  filter: blur(3px) brightness(.8);
+}
+
+.tile::after {
+  content: "";
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+
+  background-color: none;
+  background-image: url(../../src/img/gameImages/2048/2048.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .header {
